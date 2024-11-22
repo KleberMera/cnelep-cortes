@@ -1,0 +1,129 @@
+<div class="max-w-2xl mx-auto p-8 m-3 bg-white rounded-xl shadow-lg dark:bg-gray-800">
+    <!-- Formulario de Búsqueda -->
+    <form class="space-y-4">
+      <div class="space-y-4">
+        <div>
+          <label for="consultaInput" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            Consulta
+          </label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input
+              type="text"
+              id="consultaInput"
+              [(ngModel)]="consultaValue"
+              name="consultaValue"
+              class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="Ingrese su búsqueda"
+            />
+          </div>
+        </div>
+  
+        <div>
+          <label for="consultaTipo" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            Tipo de Búsqueda
+          </label>
+          <select
+            id="consultaTipo"
+            [(ngModel)]="consultaTipo"
+            name="consultaTipo"
+            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          >
+            <option value="IDENTIFICACION">Cédula</option>
+            <option value="CUEN">Código Único</option>
+            <option value="CUENTA_CONTRATO">Cuenta Contrato</option>
+          </select>
+        </div>
+      </div>
+  
+      <button
+        type="button"
+        (click)="consultar()"
+        class="w-full flex justify-center items-center px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+      >
+        @if (loading) {
+          <span class="inline-block animate-spin mr-2">⌛</span>
+        }
+        {{ loading ? 'Consultando...' : 'Consultar' }}
+      </button>
+    </form>
+  
+    <!-- Sección de Resultados -->
+    @if (cuentaContrato) {
+      <div class="mt-8 space-y-6">
+        <!-- Información Principal -->
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 space-y-4">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+            Información del Cliente
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Cuenta Contrato</p>
+              <p class="text-lg font-medium text-gray-900 dark:text-white">
+                {{ cuentaContrato }}
+              </p>
+            </div>
+            <div class="space-y-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Código Único</p>
+              <p class="text-lg font-medium text-gray-900 dark:text-white">
+                {{ cuen }}
+              </p>
+            </div>
+            <div class="col-span-1 md:col-span-2 space-y-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Dirección</p>
+              <p class="text-lg font-medium text-gray-900 dark:text-white">
+                {{ direccion }}
+              </p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Horarios -->
+        @if (horarios.length > 0) {
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+              Horarios Programados
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (horario of horarios; track horario.fechaCorte) {
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="font-semibold text-gray-700 dark:text-gray-200">
+                      {{ horario.fechaCorte }}
+                    </span>
+                  </div>
+                  <div class="mt-3 space-y-2">
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm text-gray-500 dark:text-gray-400">Desde:</span>
+                      <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ horario.horaDesde }}
+                      </span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm text-gray-500 dark:text-gray-400">Hasta:</span>
+                      <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ horario.horaHasta }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="text-center py-4">
+            <p class="text-gray-500 dark:text-gray-400">No hay horarios programados</p>
+          </div>
+        }
+      </div>
+    }
+  
+    <!-- Mensaje de Error -->
+    @if (error) {
+      <div class="mt-4 p-4 bg-red-50 dark:bg-red-900 rounded-md">
+        <p class="text-red-700 dark:text-red-200">{{ error }}</p>
+      </div>
+    }
+  </div>
